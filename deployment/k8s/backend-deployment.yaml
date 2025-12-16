@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: clapy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: clapy-backend:0.1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: clapy-config
+        - secretRef:
+            name: clapy-secrets
+        env:
+        - name: DB_HOST
+          value: "postgres"
+        - name: REDIS_ADDR
+          value: "redis:6379"
+        - name: DATABASE_URL
+          value: "postgresql://$(DB_USER):$(DB_PASSWORD)@postgres:5432/$(DB_NAME)?sslmode=disable"
+          
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: clapy
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: backend

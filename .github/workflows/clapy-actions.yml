@@ -1,0 +1,20 @@
+name: Clapy Security Audit
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Clapy AI Scan
+        uses: clapy-ai/security-action@v1 
+        with:
+          api_key: ${{ secrets.CLAPY_API_KEY }}
+          files: './contracts'

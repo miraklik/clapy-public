@@ -1,0 +1,9 @@
+.env
+/backend/.env.local
+/backend/downloads/
+*.env
+
+.DS_Store
+
+/deployment/k8s/secret.yaml
+/deployment/k8s/configmap.yaml
